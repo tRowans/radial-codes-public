@@ -1,0 +1,5 @@
+<n>=1.117647058823529 X^2_33=4.947368421052631
+24
+<n>=27.06 X^2_99=89.41759053954176
+18
+slurmstepd: error: Unable to unlink domain socket `/var/spool/slurmd/deigo012023_37081476.4294967291`: No such file or directory
