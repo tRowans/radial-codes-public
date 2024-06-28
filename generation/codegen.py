@@ -74,49 +74,44 @@ def protograph_to_binary_matrix(protograph,s):
         binary_matrix.append(np.hstack(binary_row))
     return np.vstack(binary_matrix)
 
-def codegen(r,s,absame,checkdiff):
-    A = matgen(r,s,checkdiff)
-    if (absame):
-        B = A
-    else:
-        B = matgen(r,s,checkdiff)
-    A_proto = np.array([[Circulant(s,x) for x in row] for row in A])
-    B_proto = np.array([[Circulant(s,x) for x in row] for row in B])
-   
-    HX, HZ = lifted_product(A_proto,B_proto,s)
-    HX = protograph_to_binary_matrix(HX,s)
-    HZ = protograph_to_binary_matrix(HZ,s)
-
-    return HX,HZ
+def write_PCM_as_mtx(r,s,A,B,H,pauli,i):
+    non_zeros = sum(sum(H))
+    with open("h{}{}.mtx".format(pauli,i),'w') as f:
+        f.write("%%MatrixMarket matrix coordinate integer general\n")
+        f.write("% Field: GF(2)\n")
+        f.write("% ({},{}) QRC generated from\n".format(r,s))
+        f.write("% A = {}\n".format(A.flatten()))
+        f.write("% B = {}\n".format(B.flatten()))
+        f.write("{} {} {}\n".format(len(H),len(H[0]),non_zeros))
+        for i in range(len(H)):
+            for j in range(len(H[0])):
+                if H[i][j] == 1:
+                    f.write("{} {} 1\n".format(i+1,j+1))
 
 if __name__ == "__main__":
 
-    if len(sys.argv) != 3:
-        sys.exit("Incorrect number of arguments (expected 2)")
+    if len(sys.argv) != 6:
+        sys.exit("Incorrect number of arguments (expected 5)")
 
     r = int(sys.argv[1])
     s = int(sys.argv[2])
+    abdiff = bool(sys.argv[3])
+    checkdiff = bool(sys.argv[4])
+    n_codes = int(sys.argv[5])
 
-    A = matgen(r,s)
-    B = matgen(r,s)
+    for i in range(n_codes):
+        A = matgen(r,s,checkdiff)
+        if (abdiff):
+            B = matgen(r,s,checkdiff)
+        else:
+            B = A
 
-    A_proto = np.array([[Circulant(s,x) for x in row] for row in A])
-    B_proto = np.array([[Circulant(s,x) for x in row] for row in B])
-   
-    HX, HZ = lifted_product(A_proto,B_proto,s)
-    HX = protograph_to_binary_matrix(HX,s)
-    HZ = protograph_to_binary_matrix(HZ,s)
+        A_proto = np.array([[Circulant(s,x) for x in row] for row in A])
+        B_proto = np.array([[Circulant(s,x) for x in row] for row in B])
+       
+        HX, HZ = lifted_product(A_proto,B_proto,s)
+        HX = protograph_to_binary_matrix(HX,s)
+        HZ = protograph_to_binary_matrix(HZ,s)
 
-    xrank = np.linalg.matrix_rank(HX)
-    zrank = np.linalg.matrix_rank(HZ)
-
-    print("X group rank: {}".format(xrank))
-    print("Z group rank: {}".format(zrank))
-
-    print("Encoded qubits: {}".format(2*(r**2)*s - (xrank + zrank)))
-
-    np.savetxt("hx.csv", HX, fmt='%i', delimiter = ',')
-    np.savetxt("hz.csv", HZ, fmt='%i',  delimiter = ',')
-
-    write_PCM_as_mtx(r,s,A,B,HX,'x')
-    write_PCM_as_mtx(r,s,A,B,HZ,'z')
+        write_PCM_as_mtx(r,s,A,B,HX,'x',i+1)
+        write_PCM_as_mtx(r,s,A,B,HZ,'z',i+1)

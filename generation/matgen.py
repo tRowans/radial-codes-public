@@ -26,6 +26,19 @@ def rank_checker(newrow,A):
     else:
         return True
 
+def sum_checker_2(A,r,s):
+    for row1 in range(len(A)-1):
+        for row2 in range(row1+1,len(A)):
+            for col1 in range(r):
+                for col2 in range(r):
+                    if (col1 == col2):
+                        continue
+                    if (A[row1][col1] 
+                        - A[row1][col2] 
+                        - A[row2][col1] 
+                        + A[row2][col2]) % s == 0:
+                        return False
+    return True
 def sum_checker_2(newrow,A,r,s):
     trial = np.vstack((A,newrow))
     for i in range(len(trial)-1):
@@ -70,11 +83,11 @@ def matgen(r,s,checkdiff=False):
                 row_attempts += 1
                 newrow = np.array([random.randrange(s) for i in range(r)])
                 if (checkdiff):
-                    validrow = (difference_checker(newrow,A,r,s) 
-                                and rank_checker(newrow,A) 
+                    validrow = (difference_checker(newrow,A,r,s)
+                                and rank_checker(newrow,A)
                                 and sum_checker_2(newrow,A,r,s))
                 else:
-                    validrow = (rank_checker(newrow,A) 
+                    validrow = (rank_checker(newrow,A)
                                 and sum_checker_2(newrow,A,r,s))
             if row_attempts == 1000:
                 break
