@@ -2,7 +2,7 @@ import sys
 import numpy as np
 import stim
 from ckt_noise.base_overlapping_window_decoder import BaseOverlappingWindowDecoder
-from ldpc import bposd_decoder as BpOsdDecoder
+from ldpc import BpOsdDecoder
 from ckt_noise.config import DEFAULT_BPOSD_DECODER_ARGS
 
 
@@ -50,7 +50,7 @@ class BpOsdOverlappingWindowDecoder(BaseOverlappingWindowDecoder):
         """
         decoder = BpOsdDecoder(
             round_dcm,
-            channel_probs=list(weights),
+            error_channel=list(weights),
             **self.decoder_config,
         )
 

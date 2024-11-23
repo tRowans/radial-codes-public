@@ -7,7 +7,7 @@ from typing import List, Union
 from ckt_noise import SinterDecoder_BPOSD_OWD
 import circuit_stuff as cs
 
-CODES_PATH = "radial-codes-public/PCMs/"
+CODES_PATH = "PCMs/"
 
 
 def load_code(code: str, r: int, s: int):
@@ -139,4 +139,20 @@ def run_ec_simulation(
 
 
 if __name__ == "__main__":
-    pass
+    run_ec_simulation(
+        1e-3,
+        20,
+        12,
+        1,
+        1,
+        "bposd",
+        {
+            "max_iter": 100,
+            "bp_method": "ms",
+            "osd_method": "osd_0",
+            # "ms_scaling_factor": .625,
+            "schedule": "parallel",
+        },
+        "Z",
+        "example_ec.csv",
+    )

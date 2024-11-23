@@ -96,7 +96,7 @@ class SinterBpOsdDecoder(sinter.Decoder):
         )
         self.bposd = BpOsdDecoder(
             self.matrices.check_matrix,
-            channel_probs=list(self.matrices.priors),
+            error_channel=list(self.matrices.priors),
             max_iter=self.max_iter,
             bp_method=self.bp_method,
             ms_scaling_factor=self.ms_scaling_factor,

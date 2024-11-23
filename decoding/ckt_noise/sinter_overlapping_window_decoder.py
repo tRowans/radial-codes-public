@@ -4,7 +4,7 @@ from typing import Dict
 import numpy as np
 from sinter import Decoder, CompiledDecoder
 import stim
-from ldpc.ckt_noise.bposd_overlapping_window import BpOsdOverlappingWindowDecoder
+from .bposd_overlapping_window import BpOsdOverlappingWindowDecoder
 
 
 class SinterCompiledDecoder_OWD_Base(CompiledDecoder):

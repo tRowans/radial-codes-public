@@ -1,2 +1,2 @@
-from config import DEFAULT_BPOSD_DECODER_ARGS
-from bposd_overlapping_window import BpOsdOverlappingWindowDecoder
+from .config import DEFAULT_BPOSD_DECODER_ARGS
+from .sinter_overlapping_window_decoder import SinterDecoder_BPOSD_OWD
